@@ -17,8 +17,8 @@
  *    shallowCopy({a: 2, b: { a: [1, 2, 3]}}) => {a: 2, b: { a: [1, 2, 3]}}
  *    shallowCopy({}) => {}
  */
-function shallowCopy(/* obj */) {
-  throw new Error('Not implemented');
+function shallowCopy(obj) {
+  return Object.assign(Object.create(Object.getPrototypeOf(obj)), obj);
 }
 
 /**
@@ -32,8 +32,20 @@ function shallowCopy(/* obj */) {
  *    mergeObjects([{a: 1, b: 2}, {b: 3, c: 5}]) => {a: 1, b: 5, c: 5}
  *    mergeObjects([]) => {}
  */
-function mergeObjects(/* objects */) {
-  throw new Error('Not implemented');
+function mergeObjects(objects) {
+  const [a, b] = objects;
+  if (!a) return {};
+  if (!b) return a;
+  const res = { ...a };
+  Object.entries(b).map(([key, value]) => {
+    if (Object.hasOwn(a, key)) {
+      res[key] = value + res[key];
+    } else {
+      res[key] = value;
+    }
+    return key;
+  });
+  return res;
 }
 
 /**
@@ -49,8 +61,10 @@ function mergeObjects(/* objects */) {
  *    removeProperties({name: 'John', age: 30, city: 'New York'}, ['age']) => {name: 'John', city: 'New York'}
  *
  */
-function removeProperties(/* obj, keys */) {
-  throw new Error('Not implemented');
+function removeProperties(obj, keys) {
+  const res = Object.assign(Object.create(Object.getPrototypeOf(obj)), obj);
+  keys.map((key) => delete res[key]);
+  return res;
 }
 
 /**
@@ -65,8 +79,11 @@ function removeProperties(/* obj, keys */) {
  *    compareObjects({a: 1, b: 2}, {a: 1, b: 2}) => true
  *    compareObjects({a: 1, b: 2}, {a: 1, b: 3}) => false
  */
-function compareObjects(/* obj1, obj2 */) {
-  throw new Error('Not implemented');
+function compareObjects(obj1, obj2) {
+  const obj2Entris = Object.entries(obj2);
+  return Object.entries(obj1).every(
+    ([key, value], i) => obj2Entris[i][0] === key && obj2Entris[i][1] === value
+  );
 }
 
 /**
